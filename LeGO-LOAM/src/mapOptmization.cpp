@@ -46,6 +46,8 @@
 
 using namespace gtsam;
 
+string path;
+
 class mapOptimization{
 
 private:
@@ -219,6 +221,7 @@ private:
     float cRoll, sRoll, cPitch, sPitch, cYaw, sYaw, tX, tY, tZ;
     float ctRoll, stRoll, ctPitch, stPitch, ctYaw, stYaw, tInX, tInY, tInZ;
 
+
 public:
 
     
@@ -253,8 +256,11 @@ public:
         downSizeFilterHistoryKeyFrames.setLeafSize(0.4, 0.4, 0.4); // for histor key frames of loop closure
         downSizeFilterSurroundingKeyPoses.setLeafSize(1.0, 1.0, 1.0); // for surrounding key poses of scan-to-map optimization
 
-        downSizeFilterGlobalMapKeyPoses.setLeafSize(1.0, 1.0, 1.0); // for global map visualization
-        downSizeFilterGlobalMapKeyFrames.setLeafSize(0.4, 0.4, 0.4); // for global map visualization
+        //downSizeFilterGlobalMapKeyPoses.setLeafSize(1.0, 1.0, 1.0); // for global map visualization
+        //downSizeFilterGlobalMapKeyFrames.setLeafSize(0.4, 0.4, 0.4); // for global map visualization
+
+	downSizeFilterGlobalMapKeyPoses.setLeafSize(0.1, 0.1, 0.1); // for global map visualization
+        downSizeFilterGlobalMapKeyFrames.setLeafSize(0.1, 0.1, 0.1); // for global map visualization
 
         odomAftMapped.header.frame_id = "/camera_init";
         odomAftMapped.child_frame_id = "/aft_mapped";
@@ -728,7 +734,7 @@ public:
             publishGlobalMap();
         }
         // save final point cloud
-        pcl::io::savePCDFileASCII(fileDirectory+"finalCloud.pcd", *globalMapKeyFramesDS);
+        pcl::io::savePCDFileASCII(path + ".pcd", *globalMapKeyFramesDS);
 
         string cornerMapString = "/tmp/cornerMap.pcd";
         string surfaceMapString = "/tmp/surfaceMap.pcd";
@@ -1525,6 +1531,8 @@ public:
 
 int main(int argc, char** argv)
 {
+    path = argv[1];
+
     ros::init(argc, argv, "lego_loam");
 
     ROS_INFO("\033[1;32m---->\033[0m Map Optimization Started.");
