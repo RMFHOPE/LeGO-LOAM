@@ -171,7 +171,7 @@ An optimized version of LeGO-LOAM can be found [here](https://github.com/faconti
 
     * Download the PCL `1.9.0` file from [here](https://github.com/PointCloudLibrary/pcl/releases/download/pcl-1.9.0/pcl-1.9.0-darwin.tar.bz2)
     * To compile pcl from source, please refer to [here](https://pcl.readthedocs.io/projects/tutorials/en/latest/compiling_pcl_posix.html#stable)
-        * Refer to `stable` section and follow the command lines given:
+        * Navigate to the `stable` section and follow the command lines given:
         ```
         tar -xf pcl-1.9.0-darwin.tar.bz2
         cd pcl-1.9.0-darwin && mkdir build && cd build
