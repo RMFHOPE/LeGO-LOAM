@@ -140,3 +140,64 @@ An optimized version of LeGO-LOAM can be found [here](https://github.com/faconti
     + To convert a multi-process application into a single-process / multi-threading one; this makes the algorithm more deterministic and slightly faster.
     + To make it easier and faster to work with rosbags: processing a rosbag should be done at maximum speed allowed by the CPU and in a deterministic way.
     + As a consequence of the previous point, creating unit and regression tests will be easier.
+
+## Troubleshooting
+
+1. Outdated opencv library used
+
+    Error message:
+    ```
+    fatal error: opencv/cv.h: No such file or directory
+        13 | #include <opencv/cv.h>
+        | ^~~~~~~~~~~~~
+    ```
+
+    The error occurs due to an outdated library used in `LeGO-LOAM/LeGO-LOAM/include/utility.h`. 
+    
+    * Change the import line to `#include "opencv2/imgproc/imgproc.hpp"` 
+    * Change the gcc compile command in `CMakeLists.txt` to `set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14 -O3")`
+
+<br>
+
+2. Eigen Index Build error
+
+    Error message:
+    ```
+    /usr/include/pcl-1.10/pcl/filters/voxel_grid.h:340:21: error: ‘Index’ is not a member of ‘Eigen’ 
+        340 | for (Eigen::Index ni = 0; ni < relative_coordinates.cols (); ni++) | ^~~~~
+    ```
+
+    Edit the counter to become a normal for loop.
+
+    * Source for the `voxel_grid.h` file using:
+    ```
+        cd /usr/include/pcl-1.10/pcl/filters
+    ```
+    * Allow write permission for the header file
+    * Use your favourite editor and edit line 340 and 669. Just use `int` to substitute `Eigen::Index`
+
+<br>
+
+3. Boost library errors
+
+    Error message:
+    ```
+    /usr/bin/ld: cannot find -lBoost::serialization
+    /usr/bin/ld: cannot find -lBoost::thread
+    /usr/bin/ld: cannot find -lBoost::timer
+    /usr/bin/ld: cannot find -lBoost::chrono
+    collect2: error: ld returned 1 exit status
+    ```
+
+    Download the necessary library and include them in the CMakeLists.
+
+    *  Download the missing library if necessary: `sudo install libparmetis-dev`
+    * Include the boost libraries in `CMakeLists.txt`
+
+        ```
+        find_package(Boost REQUIRED COMPONENTS
+            thread
+            serialization
+            timer
+        )
+        ```
