@@ -167,7 +167,30 @@ An optimized version of LeGO-LOAM can be found [here](https://github.com/faconti
         340 | for (Eigen::Index ni = 0; ni < relative_coordinates.cols (); ni++) | ^~~~~
     ```
 
-    Edit the counter to become a normal for loop.
+    Replace the PCL file to version `1.9.0`.
+
+    * Download the PCL `1.9.0` file from [here](https://github.com/PointCloudLibrary/pcl/releases/download/pcl-1.9.0/pcl-1.9.0-darwin.tar.bz2)
+    * To compile pcl from source, please refer to [here](https://pcl.readthedocs.io/projects/tutorials/en/latest/compiling_pcl_posix.html#stable)
+        * Navigate to the `stable` section and follow the command lines given:
+        ```
+        tar -xf pcl-1.9.0-darwin.tar.bz2
+        cd pcl-1.9.0-darwin && mkdir build && cd build
+        cmake -DCMAKE_BUILD_TYPE=Release ..
+        make -j2
+        sudo make -j2 install
+        ```
+    * Once the compilation is done, edit these few lines in the `CmakeList` in `loam_velodyne`:
+        ```cmake
+        find_package(PCL 1.9.1 REQUIRED)
+        include_directories(${PCL_INCLUDE_DIRS})
+        link_directories(${PCL_LIBRARY_DIRS})
+        add_definitions(${PCL_DEFINITIONS})
+        ```
+    * Then... Continue with the compilation of LOAM
+    
+    ### Alternative solution
+    
+    This solution will require you to edit a library file manually. Edit the counter to become a normal for loop.
 
     * Source for the `voxel_grid.h` file using:
     ```
